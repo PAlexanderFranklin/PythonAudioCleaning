@@ -1,6 +1,9 @@
 from pathlib import Path
+import keyboard
+import time
 
 # Setup:
+#   pip install keyboard
 #   Change Audacity keyboard preferences:
 #       Remove "repeat amplify" binding
 #       Set "ampllify" to Ctrl+R
@@ -18,11 +21,17 @@ for file in source.iterdir():
     if file.name[-3:] == "wav":
         print(file.name)
 
-# Pseudo:
-#   Clean audio:
-#       Ctrl+A (select all)
-#       Ctrl+R (amplify)
-#       Enter (confirm)
-#       Ctrl+A (select all)
-#       Ctrl+A (select all)
-#       Ctrl+A (select all)
+def cleanAudio():
+    time.sleep(0.05)
+    keyboard.send("ctrl+a") # select all
+    time.sleep(0.05)
+    keyboard.send("ctrl+r") # amplify
+    time.sleep(0.05)
+    keyboard.send("enter") # confirm
+    time.sleep(0.05)
+#       Noise Reduction
+#       Compressor
+
+while True:
+    keyboard.wait(";")
+    cleanAudio()
