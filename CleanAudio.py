@@ -1,5 +1,6 @@
-from pathlib import Path
 import keyboard
+from pathlib import Path
+import subprocess
 import time
 
 # Setup:
@@ -8,14 +9,19 @@ import time
 #       Remove "repeat amplify" binding
 #       Set "ampllify" to Ctrl+R
 
+# Audacity executable path
+Audacity = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 
 # Configure source and destination
 source = Path.cwd() / "Source"
 destination = Path.cwd() / "Destination"
 
+
+# Start of Script
 print("source: ", source)
 print("destination: ", destination)
 
+subprocess.Popen([Audacity])
 
 for file in source.iterdir():
     if file.name[-3:] == "wav":
