@@ -7,7 +7,7 @@ import time
 #   pip install keyboard
 #   Change Audacity keyboard preferences:
 #       Remove "repeat amplify" binding
-#       Set "Ampllify" and other settings to the keys in the "Hotkeys" section below
+#       Set "Normalize" and other settings to the keys in the "Hotkeys" section below
 #   Set effect defaults in Audacity:
 #       "Label Sounds"
 #           Regions between sounds 
@@ -17,7 +17,7 @@ import time
 
 
 # Hotkeys
-amplify = "ctrl+R"
+normalize = "ctrl+R"
 labelSounds = "alt+L"
 selectAll = "ctrl+A"
 nextLabel = "alt+]"
@@ -43,7 +43,7 @@ for file in source.iterdir():
 
 def cleanAudio():
     commandList = [
-        selectAll, amplify, "enter", 
+        selectAll, normalize, "enter", 
         labelSounds, "enter", nextLabel, 
         noiseReduction, "enter", selectAll, noiseReduction, 
         "enter"
@@ -51,7 +51,6 @@ def cleanAudio():
     for command in commandList:
         time.sleep(1)
         keyboard.send(command)
-#   Compressor
 
 while True:
     keyboard.wait(";")
