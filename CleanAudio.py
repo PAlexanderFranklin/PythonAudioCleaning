@@ -1,4 +1,5 @@
 import keyboard
+import os
 from pathlib import Path
 import subprocess
 import time
@@ -31,6 +32,9 @@ Audacity = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 # Configure source and destination
 source = Path.cwd() / "Source"
 destination = Path.cwd() / "Destination"
+
+# Terminate script from anywhere
+keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 
 
 # Start of Script
