@@ -6,7 +6,7 @@ import subprocess
 # Setup
 #   pip install keyboard
 #   Change Audacity keyboard preferences:
-#       Set "Normalize" and other settings to the keys in the "Hotkeys" section below
+#       Set audacity keyboard preferences to the keys in the "Hotkeys" section below
 #   Set effect defaults in Audacity:
 #       "Label Sounds"
 #           Regions between sounds 
@@ -28,6 +28,11 @@ removeTracks = "alt+T"
 selectAll = "ctrl+A" # default
 trackStartToCursor = "L"
 
+# Configure source, destination, and backup
+source = Path.cwd() / "Source"
+destination = Path.cwd() / "Destination"
+backup = Path.cwd() / "Backup"
+
 # Audacity executable path
 Audacity = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 
@@ -48,6 +53,28 @@ def cleanAudio():
         "enter", compressor, "enter"
     ])
 
+def storeBackup():
+    list1 = []
+    list2 = []
+    for file in source.iterdir():
+        list1.append(file.name)
+    for file in destination.iterdir():
+        list2.append(file.name)
+    set1 = set(list1)
+    set2 = set(list2)
+    fileNameList = list(set1 & set2)
+    fileList = []
+    for name in fileNameList:
+        fileList.append(source / name)
+    for file in fileList:
+        try:
+            with (backup / file.name).open(mode="xb") as fid:
+                fid.write(file.read_bytes())
+        except:
+            print(file.name + " failed to copy")
+        else:
+            Path.unlink(file)
+
 # Script Hotkeys
 keyboard.add_hotkey("a", typeCommands, args=[[selectAll, removeTracks, importAudio]])
 keyboard.add_hotkey("s", typeCommands, args=[[selectAll, normalize, "enter"]])
@@ -67,5 +94,5 @@ keyboard.send("enter")
 
 while True:
     cleanAudio()
-
+    storeBackup()
     keyboard.wait("g")
