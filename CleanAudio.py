@@ -48,6 +48,7 @@ def typeCommands(commandList):
     for command in commandList:
         keyboard.send(command)
 
+# Used to remove junk files from source without deleting them to avoid data loss
 def storeBackup():
     set1 = set()
     set2 = set()
@@ -72,6 +73,7 @@ def importAndBackup():
     storeBackup()
     typeCommands([selectAll, removeTracks, importAudio])
 
+# Changes hotkey behaviour after first press
 def newHotkey():
     typeCommands([
         selectAll, noiseReduction, "enter",
@@ -104,6 +106,7 @@ initialHotkey = keyboard.add_hotkey("g", newHotkey)
 # Keep the script from closing for one hour so that hotkeys work
 for i in range(0, 720):
     time.sleep(5)
+    # Close Script when Audacity closes
     # Doesn't work in VSCode, but does work when script is started normally
     if Audacity.poll() == 0:
         os._exit(0)
