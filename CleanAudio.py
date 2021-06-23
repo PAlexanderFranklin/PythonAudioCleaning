@@ -109,4 +109,7 @@ for i in range(0, 720):
     # Close Script when Audacity closes
     # Doesn't work in VSCode, but does work when script is started normally
     if Audacity.poll() == 0:
+        storeBackup()
         os._exit(0)
+        
+storeBackup()
