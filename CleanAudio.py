@@ -2,6 +2,7 @@ import keyboard
 import os
 from pathlib import Path
 import subprocess
+import time
 
 # Setup
 #   pip install keyboard
@@ -99,5 +100,5 @@ keyboard.add_hotkey("g", typeCommands, args=[[
 
 keyboard.send("g")
 
-# Keep the script from closing so hotkeys work
-keyboard.wait()
+# Keep the script from closing for 30 minutes so that hotkeys work
+time.sleep(1800)
