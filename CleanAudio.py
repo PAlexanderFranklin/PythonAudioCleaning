@@ -17,59 +17,56 @@ import time
 #       "Compressor"
 #           Set attack and release times to their minimum value
 
-# Hotkeys
-normalize = "alt+N"
+# Audacity Hotkeys
+compressor = "ctrl+H"
+cursorToTrackEnd = "shift+K"
+importAudio = "ctrl+shift+I" # default
 labelSounds = "alt+L"
-selectAll = "ctrl+A" # default
 nextLabel = "alt+]"
 noiseReduction = "alt+R"
-cursorShortJumpRight = "." # default
-trackStartToCursor = "ctrl+J"
+normalize = "alt+N"
+removeTracks = "alt+T"
+selectAll = "ctrl+A" # default
+trackStartToCursor = "L"
 
 # Audacity executable path
 Audacity = Path("C:/Program Files (x86)/Audacity/audacity.exe")
-
-# Configure source and destination
-source = Path.cwd() / "Source"
-destination = Path.cwd() / "Destination"
 
 # Terminate script from anywhere
 keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 
 
-# Start of Script
-print("source: ", source)
-print("destination: ", destination)
-
-# subprocess.Popen([Audacity])
-
-# for file in source.iterdir():
-#     if file.name[-3:] == "wav":
-#         print(file.name)
+def typeCommands(commandList):
+    for command in commandList:
+        keyboard.send(command)
 
 def cleanAudio():
-    commandList = [
+    typeCommands([
         selectAll, normalize, "enter", 
         labelSounds, "enter", nextLabel, 
         noiseReduction, "tab", "tab", "tab", "tab", "enter",
         selectAll, noiseReduction, 
-        "enter"
-    ]
-    for command in commandList:
-        time.sleep(1)
-        keyboard.send(command)
+        "enter", compressor, "enter"
+    ])
+
+# Script Hotkeys
+keyboard.add_hotkey("a", typeCommands, args=[[selectAll, removeTracks, importAudio]])
+keyboard.add_hotkey("s", typeCommands, args=[[selectAll, normalize, "enter"]])
+keyboard.add_hotkey("d", typeCommands, args=[[trackStartToCursor, "backspace"]])
+keyboard.add_hotkey("f", typeCommands, args=[[cursorToTrackEnd, "backspace"]])
+
+subprocess.Popen([Audacity])
+
+keyboard.wait("g")
+
+# Get a default noise profile so the
+# noise reduction menu is the same
+# for all subsequent noise reductions
+keyboard.send(selectAll)
+keyboard.send(noiseReduction)
+keyboard.send("enter")
 
 while True:
-    # Macro start button
-    keyboard.wait(";")
-
-    # Get a default noise profile so the
-    # noise reduction menu is the same
-    # for all subsequent noise reductions
-    keyboard.send(selectAll)
-    time.sleep(1)
-    keyboard.send(noiseReduction)
-    time.sleep(1)
-    keyboard.send("enter")
-
     cleanAudio()
+
+    keyboard.wait("g")
