@@ -36,9 +36,9 @@ destination = Path.cwd() / "Destination"
 backup = Path.cwd() / "Backup"
 
 # Audacity executable path
-Audacity = Path("C:/Program Files (x86)/Audacity/audacity.exe")
+AudacityPath = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 
-subprocess.Popen([Audacity])
+Audacity = subprocess.Popen(AudacityPath)
 
 # Terminate script from anywhere
 keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
@@ -101,4 +101,7 @@ keyboard.add_hotkey("g", typeCommands, args=[[
 keyboard.send("g")
 
 # Keep the script from closing for 30 minutes so that hotkeys work
-time.sleep(1800)
+for i in range(0, 360):
+    time.sleep(5)
+    if Audacity.poll() == 0:
+        os._exit(0)
