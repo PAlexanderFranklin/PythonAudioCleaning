@@ -19,6 +19,7 @@ import subprocess
 # Audacity Hotkeys
 compressor = "ctrl+H"
 cursorToTrackEnd = "shift+K"
+exportAudio = "ctrl+shift+E"
 importAudio = "ctrl+shift+I" # default
 labelSounds = "alt+L"
 nextLabel = "alt+]"
@@ -36,6 +37,8 @@ backup = Path.cwd() / "Backup"
 # Audacity executable path
 Audacity = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 
+subprocess.Popen([Audacity])
+
 # Terminate script from anywhere
 keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 
@@ -44,24 +47,13 @@ def typeCommands(commandList):
     for command in commandList:
         keyboard.send(command)
 
-def cleanAudio():
-    typeCommands([
-        selectAll, normalize, "enter", 
-        labelSounds, "enter", nextLabel, 
-        noiseReduction, "tab", "tab", "tab", "tab", "enter",
-        selectAll, noiseReduction, 
-        "enter", compressor, "enter"
-    ])
-
 def storeBackup():
-    list1 = []
-    list2 = []
+    set1 = set()
+    set2 = set()
     for file in source.iterdir():
-        list1.append(file.name)
+        set1.add(file.name)
     for file in destination.iterdir():
-        list2.append(file.name)
-    set1 = set(list1)
-    set2 = set(list2)
+        set2.add(file.name)
     fileNameList = list(set1 & set2)
     fileList = []
     for name in fileNameList:
@@ -74,14 +66,17 @@ def storeBackup():
             print(file.name + " failed to copy")
         else:
             Path.unlink(file)
+    
+def importAndBackup():
+    storeBackup()
+    typeCommands([selectAll, removeTracks, importAudio])
 
 # Script Hotkeys
-keyboard.add_hotkey("a", typeCommands, args=[[selectAll, removeTracks, importAudio]])
+keyboard.add_hotkey("a", importAndBackup)
 keyboard.add_hotkey("s", typeCommands, args=[[selectAll, normalize, "enter"]])
 keyboard.add_hotkey("d", typeCommands, args=[[trackStartToCursor, "backspace"]])
 keyboard.add_hotkey("f", typeCommands, args=[[cursorToTrackEnd, "backspace"]])
-
-subprocess.Popen([Audacity])
+keyboard.add_hotkey("h", storeBackup)
 
 keyboard.wait("g")
 
@@ -92,7 +87,17 @@ keyboard.send(selectAll)
 keyboard.send(noiseReduction)
 keyboard.send("enter")
 
-while True:
-    cleanAudio()
-    storeBackup()
-    keyboard.wait("g")
+
+# The Cleaning Part
+keyboard.add_hotkey("g", typeCommands, args=[[
+        selectAll, normalize, "enter", 
+        labelSounds, "enter", nextLabel, 
+        noiseReduction, "tab", "tab", "tab", "tab", "enter",
+        selectAll, noiseReduction, 
+        "enter", compressor, "enter", exportAudio
+    ]])
+
+keyboard.send("g")
+
+# Keep the script from closing so hotkeys work
+keyboard.wait()
