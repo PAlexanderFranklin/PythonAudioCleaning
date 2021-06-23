@@ -72,25 +72,17 @@ def importAndBackup():
     storeBackup()
     typeCommands([selectAll, removeTracks, importAudio])
 
-# Script Hotkeys
-keyboard.add_hotkey("a", importAndBackup)
-keyboard.add_hotkey("s", typeCommands, args=[[selectAll, normalize, "enter"]])
-keyboard.add_hotkey("d", typeCommands, args=[[trackStartToCursor, "backspace"]])
-keyboard.add_hotkey("f", typeCommands, args=[[cursorToTrackEnd, "backspace"]])
-keyboard.add_hotkey("h", storeBackup)
-
-keyboard.wait("g")
-
-# Get a default noise profile so the
-# noise reduction menu is the same
-# for all subsequent noise reductions
-keyboard.send(selectAll)
-keyboard.send(noiseReduction)
-keyboard.send("enter")
-
-
-# The Cleaning Part
-keyboard.add_hotkey("g", typeCommands, args=[[
+def newHotkey():
+    typeCommands([
+        selectAll, noiseReduction, "enter",
+        selectAll, normalize, "enter", 
+        labelSounds, "enter", nextLabel, 
+        noiseReduction, "tab", "tab", "tab", "tab", "enter",
+        selectAll, noiseReduction, "enter",
+        compressor, "enter", exportAudio
+    ])
+    keyboard.remove_hotkey(initialHotkey)
+    keyboard.add_hotkey("g", typeCommands, args=[[
         selectAll, normalize, "enter", 
         labelSounds, "enter", nextLabel, 
         noiseReduction, "tab", "tab", "tab", "tab", "enter",
@@ -98,10 +90,20 @@ keyboard.add_hotkey("g", typeCommands, args=[[
         "enter", compressor, "enter", exportAudio
     ]])
 
-keyboard.send("g")
+# Script Hotkeys
+keyboard.add_hotkey("a", importAndBackup)
+keyboard.add_hotkey("s", typeCommands, args=[[selectAll, normalize, "enter"]])
+keyboard.add_hotkey("d", typeCommands, args=[[trackStartToCursor, "backspace"]])
+keyboard.add_hotkey("f", typeCommands, args=[[cursorToTrackEnd, "backspace"]])
+keyboard.add_hotkey("h", storeBackup)
 
-# Keep the script from closing for 30 minutes so that hotkeys work
-for i in range(0, 360):
+# This hotkey needs to do something different the first time,
+# so it calls a function that replaces it
+initialHotkey = keyboard.add_hotkey("g", newHotkey)
+
+# Keep the script from closing for one hour so that hotkeys work
+for i in range(0, 720):
     time.sleep(5)
+    # Doesn't work in VSCode, but does work when script is started normally
     if Audacity.poll() == 0:
         os._exit(0)
