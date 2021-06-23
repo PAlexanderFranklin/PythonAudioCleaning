@@ -2,7 +2,6 @@ import keyboard
 import os
 from pathlib import Path
 import subprocess
-import time
 
 # Setup
 #   pip install keyboard
