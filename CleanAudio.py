@@ -3,9 +3,10 @@ import os
 from pathlib import Path
 import subprocess
 import time
+from win32gui import GetForegroundWindow, GetWindowText
 
 # Setup
-#   pip install keyboard
+#   pip install (modules that are imported above)
 #   Change Audacity keyboard preferences:
 #       Set audacity keyboard preferences to the keys in the "Hotkeys" section below
 #   Set effect defaults in Audacity:
@@ -40,13 +41,24 @@ AudacityPath = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 
 Audacity = subprocess.Popen(AudacityPath)
 
+# Store Audacity Window for checking when effects are finished processing
+while (GetWindowText(GetForegroundWindow()) != "Audacity"):
+    time.sleep(0.5)
+mainAudacityWindow = GetForegroundWindow()
+
 # Terminate script from anywhere
 keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 
 
 def typeCommands(commandList):
     for command in commandList:
+        time.sleep(0.25)
         keyboard.send(command)
+        if(command == "enter"):
+            while True:
+                time.sleep(2)
+                if (GetForegroundWindow() == mainAudacityWindow):
+                    break
 
 # Used to remove junk files from source without deleting them to avoid data loss
 def storeBackup():
