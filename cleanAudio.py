@@ -7,6 +7,9 @@ from win32gui import GetForegroundWindow, GetWindowText
 
 import populateMetaData
 
+# Off by default because this is use-case specific
+useMetaData = False
+
 # Setup
 #   pip install (modules that are imported above)
 #   Change Audacity preferences:
@@ -33,7 +36,7 @@ removeTracksKey = "alt+T"
 selectAllKey = "ctrl+A" # default
 trackStartToCursorKey = "L"
 
-# Configure source, destination, and backup
+# Configure
 source = Path.cwd() / "Source"
 destination = Path.cwd() / "Destination"
 backup = Path.cwd() / "Backup"
@@ -95,6 +98,8 @@ def cleanAudio():
         selectAllKey, noiseReductionKey, 
         "enter", compressorKey, "enter", exportAudioKey
     ])
+    if useMetaData:
+        populateMetaData.foo(GetWindowText(mainAudacityWindow))
 
 # Changes hotkey behaviour after first press
 def initialClean():
@@ -106,6 +111,8 @@ def initialClean():
         selectAllKey, noiseReductionKey, "enter",
         compressorKey, "enter", exportAudioKey
     ])
+    if useMetaData:
+        populateMetaData.foo(GetWindowText(mainAudacityWindow))
     keyboard.remove_hotkey(initialHotkey)
     keyboard.add_hotkey("g", cleanAudio)
 

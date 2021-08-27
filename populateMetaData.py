@@ -1,2 +1,2 @@
-def helloWorld(string):
-    print(string)
+def foo(fileName):
+    print(fileName)
