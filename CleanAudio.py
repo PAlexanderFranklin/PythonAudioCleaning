@@ -5,6 +5,8 @@ import subprocess
 import time
 from win32gui import GetForegroundWindow, GetWindowText
 
+import populateMetaData
+
 # Setup
 #   pip install (modules that are imported above)
 #   Change Audacity preferences:
