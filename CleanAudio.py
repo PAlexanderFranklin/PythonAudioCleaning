@@ -7,7 +7,7 @@ from win32gui import GetForegroundWindow, GetWindowText
 
 # Setup
 #   pip install (modules that are imported above)
-#   Change Audacity keyboard preferences:
+#   Change Audacity preferences:
 #       Set audacity keyboard preferences to the keys in the "Hotkeys" section below
 #   Set effect defaults in Audacity:
 #       "Label Sounds"
@@ -19,17 +19,17 @@ from win32gui import GetForegroundWindow, GetWindowText
 #           Set attack and release times to their minimum value
 
 # Audacity Hotkeys
-compressor = "ctrl+H"
-cursorToTrackEnd = "shift+K"
-exportAudio = "ctrl+shift+E"
-importAudio = "ctrl+shift+I" # default
-labelSounds = "alt+L"
-nextLabel = "alt+]"
-noiseReduction = "alt+R"
-normalize = "alt+N"
-removeTracks = "alt+T"
-selectAll = "ctrl+A" # default
-trackStartToCursor = "L"
+compressorKey = "ctrl+H"
+cursorToTrackEndKey = "shift+K"
+exportAudioKey = "ctrl+shift+E"
+importAudioKey = "ctrl+shift+I" # default
+labelSoundsKey = "alt+L"
+nextLabelKey = "alt+]"
+noiseReductionKey = "alt+R"
+normalizeKey = "alt+N"
+removeTracksKey = "alt+T"
+selectAllKey = "ctrl+A" # default
+trackStartToCursorKey = "L"
 
 # Configure source, destination, and backup
 source = Path.cwd() / "Source"
@@ -83,37 +83,40 @@ def storeBackup():
     
 def importAndBackup():
     storeBackup()
-    typeCommands([selectAll, removeTracks, importAudio])
+    typeCommands([selectAllKey, removeTracksKey, importAudioKey])
+
+def cleanAudio():
+    typeCommands([
+        selectAllKey, normalizeKey, "enter", 
+        labelSoundsKey, "enter", nextLabelKey, 
+        noiseReductionKey, "tab", "tab", "tab", "tab", "enter",
+        selectAllKey, noiseReductionKey, 
+        "enter", compressorKey, "enter", exportAudioKey
+    ])
 
 # Changes hotkey behaviour after first press
-def newHotkey():
+def initialClean():
     typeCommands([
-        selectAll, noiseReduction, "enter",
-        selectAll, normalize, "enter", 
-        labelSounds, "enter", nextLabel, 
-        noiseReduction, "tab", "tab", "tab", "tab", "enter",
-        selectAll, noiseReduction, "enter",
-        compressor, "enter", exportAudio
+        selectAllKey, noiseReductionKey, "enter",
+        selectAllKey, normalizeKey, "enter", 
+        labelSoundsKey, "enter", nextLabelKey, 
+        noiseReductionKey, "tab", "tab", "tab", "tab", "enter",
+        selectAllKey, noiseReductionKey, "enter",
+        compressorKey, "enter", exportAudioKey
     ])
     keyboard.remove_hotkey(initialHotkey)
-    keyboard.add_hotkey("g", typeCommands, args=[[
-        selectAll, normalize, "enter", 
-        labelSounds, "enter", nextLabel, 
-        noiseReduction, "tab", "tab", "tab", "tab", "enter",
-        selectAll, noiseReduction, 
-        "enter", compressor, "enter", exportAudio
-    ]])
+    keyboard.add_hotkey("g", cleanAudio)
 
 # Script Hotkeys
 keyboard.add_hotkey("a", importAndBackup)
-keyboard.add_hotkey("s", typeCommands, args=[[selectAll, normalize, "enter"]])
-keyboard.add_hotkey("d", typeCommands, args=[[trackStartToCursor, "backspace"]])
-keyboard.add_hotkey("f", typeCommands, args=[[cursorToTrackEnd, "backspace"]])
+keyboard.add_hotkey("s", typeCommands, args=[[selectAllKey, normalizeKey, "enter"]])
+keyboard.add_hotkey("d", typeCommands, args=[[trackStartToCursorKey, "backspace"]])
+keyboard.add_hotkey("f", typeCommands, args=[[cursorToTrackEndKey, "backspace"]])
 keyboard.add_hotkey("h", storeBackup)
 
 # This hotkey needs to do something different the first time,
 # so it calls a function that replaces it
-initialHotkey = keyboard.add_hotkey("g", newHotkey)
+initialHotkey = keyboard.add_hotkey("g", initialClean)
 
 # Keep the script from closing for one hour so that hotkeys work
 for i in range(0, 720):
