@@ -14,6 +14,7 @@ useMetaData = False
 #   pip install (modules that are imported above)
 #   Change Audacity preferences:
 #       Set audacity keyboard preferences to the keys in the "Hotkeys" section below
+#       Remove Ctrl+F binding (Track Size - Fit to Width)
 #   Set effect defaults in Audacity:
 #       "Label Sounds"
 #           Regions between sounds 
@@ -24,7 +25,7 @@ useMetaData = False
 #           Set attack and release times to their minimum value
 
 # Audacity Hotkeys
-compressorKey = "ctrl+H"
+compressorKey = "ctrl+J"
 cursorToTrackEndKey = "shift+K"
 exportAudioKey = "ctrl+shift+E"
 importAudioKey = "ctrl+shift+I" # default
@@ -35,6 +36,11 @@ normalizeKey = "alt+N"
 removeTracksKey = "alt+T"
 selectAllKey = "ctrl+A" # default
 trackStartToCursorKey = "L"
+
+# Script Hotkeys
+selectPreviousOptionKey = "ctrl+G"
+executeOptionKey = "ctrl+F"
+selectNextOptionKey = "ctrl+H"
 
 # Configure
 source = Path.cwd() / "Source"
@@ -53,7 +59,6 @@ mainAudacityWindow = GetForegroundWindow()
 
 # Terminate script from anywhere
 keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
-
 
 def typeCommands(commandList):
     for command in commandList:
@@ -90,7 +95,22 @@ def importAndBackup():
     storeBackup()
     typeCommands([selectAllKey, removeTracksKey, importAudioKey])
 
+def normalizeAudio():
+    typeCommands([selectAllKey, normalizeKey, "enter"])
+
+def deleteBeginning():
+    typeCommands([trackStartToCursorKey, "backspace"])
+
+def deleteEnd():
+    typeCommands([cursorToTrackEndKey, "backspace"])
+
 def cleanAudio():
+    # This try except block is to add behavior the first time this function is called
+    try:
+        test = cleanAudio.ran == True
+    except:
+        typeCommands([selectAllKey, noiseReductionKey, "enter"])
+        cleanAudio.ran = True
     typeCommands([
         selectAllKey, normalizeKey, "enter", 
         labelSoundsKey, "enter", nextLabelKey, 
@@ -101,31 +121,45 @@ def cleanAudio():
     if useMetaData:
         populateMetaData.foo(GetWindowText(mainAudacityWindow))
 
-# Changes hotkey behaviour after first press
-def initialClean():
-    typeCommands([
-        selectAllKey, noiseReductionKey, "enter",
-        selectAllKey, normalizeKey, "enter", 
-        labelSoundsKey, "enter", nextLabelKey, 
-        noiseReductionKey, "tab", "tab", "tab", "tab", "enter",
-        selectAllKey, noiseReductionKey, "enter",
-        compressorKey, "enter", exportAudioKey
-    ])
-    if useMetaData:
-        populateMetaData.foo(GetWindowText(mainAudacityWindow))
-    keyboard.remove_hotkey(initialHotkey)
-    keyboard.add_hotkey("g", cleanAudio)
+macroOptions = [importAndBackup,
+                normalizeAudio,
+                deleteBeginning,
+                deleteEnd,
+                cleanAudio,
+                storeBackup
+                ]
+
+optionCursor = 0
+
+def selectPreviousOption():
+    global optionCursor
+    if optionCursor == 0:
+        optionCursor = len(macroOptions) - 1
+    else:
+        optionCursor -= 1
+    print(macroOptions[optionCursor].__name__)
+
+def selectNextOption():
+    global optionCursor
+    if optionCursor == len(macroOptions) - 1:
+        optionCursor = 0
+    else:
+        optionCursor += 1
+    print(macroOptions[optionCursor].__name__)
+
+def executeOption():
+    global optionCursor
+    macroOptions[optionCursor]()
+    if optionCursor == len(macroOptions) - 1:
+        optionCursor = 0
+    else:
+        optionCursor += 1
+    print(macroOptions[optionCursor].__name__)
 
 # Script Hotkeys
-keyboard.add_hotkey("a", importAndBackup)
-keyboard.add_hotkey("s", typeCommands, args=[[selectAllKey, normalizeKey, "enter"]])
-keyboard.add_hotkey("d", typeCommands, args=[[trackStartToCursorKey, "backspace"]])
-keyboard.add_hotkey("f", typeCommands, args=[[cursorToTrackEndKey, "backspace"]])
-keyboard.add_hotkey("h", storeBackup)
-
-# This hotkey needs to do something different the first time,
-# so it calls a function that replaces it
-initialHotkey = keyboard.add_hotkey("g", initialClean)
+keyboard.add_hotkey(selectPreviousOptionKey, selectPreviousOption)
+keyboard.add_hotkey(selectNextOptionKey, selectNextOption)
+keyboard.add_hotkey(executeOptionKey, executeOption)
 
 # Keep the script from closing for one hour so that hotkeys work
 for i in range(0, 720):
