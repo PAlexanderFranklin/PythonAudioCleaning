@@ -66,7 +66,7 @@ def typeCommands(commandList):
         keyboard.send(command)
         if(command == "enter"):
             while True:
-                time.sleep(2)
+                time.sleep(1)
                 if (GetForegroundWindow() == mainAudacityWindow):
                     break
 
