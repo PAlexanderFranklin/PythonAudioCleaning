@@ -119,7 +119,7 @@ def cleanAudio():
         "enter", compressorKey, "enter", exportAudioKey
     ])
     if useMetaData:
-        populateMetaData.foo(GetWindowText(mainAudacityWindow))
+        populateMetaData.addDBEntry(GetWindowText(mainAudacityWindow))
 
 macroOptions = [importAndBackup,
                 normalizeAudio,
