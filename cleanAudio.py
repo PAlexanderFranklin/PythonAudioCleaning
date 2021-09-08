@@ -12,6 +12,8 @@ useMetaData = False
 
 # Setup
 #   pip install (modules that are imported above)
+#   Written for Audacity 3.0.0
+#   Probably broken for other versions due to menu changes
 #   Change Audacity preferences:
 #       Set audacity keyboard preferences to the keys in the "Hotkeys" section below
 #       Remove Ctrl+F binding (Track Size - Fit to Width)
