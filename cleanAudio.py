@@ -17,8 +17,6 @@ useMetaData = False
 #       Remove Ctrl+F binding (Track Size - Fit to Width)
 #   Set effect defaults in Audacity:
 #       "Label Sounds"
-#           Regions between sounds 
-#           Threshold level:          (-22.0 db seems to work)
 #           Minimum silence duration: 2 seconds
 #           Label type:               Region between sounds
 #       "Compressor"
@@ -62,11 +60,11 @@ keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 
 def typeCommands(commandList):
     for command in commandList:
-        time.sleep(0.25)
+        time.sleep(0.2)
         keyboard.send(command)
         if(command == "enter"):
             while True:
-                time.sleep(1)
+                time.sleep(0.2)
                 if (GetForegroundWindow() == mainAudacityWindow):
                     break
 
@@ -104,6 +102,25 @@ def deleteBeginning():
 def deleteEnd():
     typeCommands([cursorToTrackEndKey, "backspace"])
 
+def labelSounds():
+    for i in range (-16, -8):
+        keyboard.send(selectAllKey)
+        time.sleep(0.1)
+        keyboard.send(labelSoundsKey)
+        time.sleep(0.2)
+        keyboard.write(str(i*2))
+        time.sleep(0.1)
+        keyboard.send("enter")
+        time.sleep(0.2)
+        for j in range (0, 10):
+            LSWindow = GetForegroundWindow()
+            time.sleep(1)
+            if GetForegroundWindow() == mainAudacityWindow:
+                return
+            if GetForegroundWindow() != LSWindow:
+                keyboard.send("enter")
+                break
+
 def cleanAudio():
     # This try except block is to add behavior the first time this function is called
     try:
@@ -111,12 +128,16 @@ def cleanAudio():
     except:
         typeCommands([selectAllKey, noiseReductionKey, "enter"])
         cleanAudio.ran = True
+    
+    normalizeAudio()
+
+    labelSounds()
+
     typeCommands([
-        selectAllKey, normalizeKey, "enter", 
-        labelSoundsKey, "enter", nextLabelKey, 
+        nextLabelKey, 
         noiseReductionKey, "tab", "tab", "tab", "tab", "enter",
-        selectAllKey, noiseReductionKey, 
-        "enter", compressorKey, "enter", exportAudioKey
+        selectAllKey, noiseReductionKey, "enter",
+        compressorKey, "enter", exportAudioKey
     ])
     if useMetaData:
         populateMetaData.addDBEntry(GetWindowText(mainAudacityWindow))
