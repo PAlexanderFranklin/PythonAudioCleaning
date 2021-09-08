@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import subprocess
 import time
-from win32gui import GetForegroundWindow, GetWindowText
+from win32gui import GetForegroundWindow, GetWindowText, GetClassName
 
 import populateMetaData
 
@@ -33,7 +33,7 @@ noiseReductionKey = "alt+R"
 normalizeKey = "alt+N"
 removeTracksKey = "alt+T"
 selectAllKey = "ctrl+A" # default
-trackStartToCursorKey = "L"
+trackStartToCursorKey = "shift+L"
 
 # Script Hotkeys
 selectPreviousOptionKey = "ctrl+G"
@@ -50,9 +50,18 @@ AudacityPath = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 
 Audacity = subprocess.Popen(AudacityPath)
 
+# When opened, Audacity has a different menu structure than after a noise profile is obtained.
+getNoiseProfile = False
+
 # Store Audacity Window for checking when effects are finished processing
-while (GetWindowText(GetForegroundWindow()) != "Audacity"):
-    time.sleep(0.5)
+while True:
+    theWindow = GetForegroundWindow()
+    if GetClassName(theWindow) == "wxWindowNR":
+        if GetWindowText(theWindow) != "Audacity is starting up...":
+            break
+        else:
+            getNoiseProfile = True
+    time.sleep(0.25)
 mainAudacityWindow = GetForegroundWindow()
 
 # Terminate script from anywhere
@@ -60,11 +69,11 @@ keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 
 def typeCommands(commandList):
     for command in commandList:
-        time.sleep(0.2)
+        time.sleep(0.25)
         keyboard.send(command)
         if(command == "enter"):
             while True:
-                time.sleep(0.2)
+                time.sleep(0.25)
                 if (GetForegroundWindow() == mainAudacityWindow):
                     break
 
@@ -122,12 +131,11 @@ def labelSounds():
                 break
 
 def cleanAudio():
-    # This try except block is to add behavior the first time this function is called
-    try:
-        test = cleanAudio.ran == True
-    except:
+    # This "if" block is used to determine menu structure
+    global getNoiseProfile
+    if getNoiseProfile:
         typeCommands([selectAllKey, noiseReductionKey, "enter"])
-        cleanAudio.ran = True
+        getNoiseProfile = False
     
     normalizeAudio()
 
@@ -176,6 +184,8 @@ def executeOption():
     else:
         optionCursor += 1
     print(macroOptions[optionCursor].__name__)
+
+print(macroOptions[optionCursor].__name__)
 
 # Script Hotkeys
 keyboard.add_hotkey(selectPreviousOptionKey, selectPreviousOption)
