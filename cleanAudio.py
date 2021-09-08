@@ -114,21 +114,21 @@ def deleteEnd():
     typeCommands([cursorToTrackEndKey, "backspace"])
 
 def labelSounds():
-    for i in range (-16, -8):
+    for i in range (-28, -18):
         keyboard.send(selectAllKey)
-        time.sleep(0.1)
+        time.sleep(0.05)
         keyboard.send(labelSoundsKey)
         time.sleep(0.2)
-        keyboard.write(str(i*2))
-        time.sleep(0.1)
+        keyboard.write(str(i))
         keyboard.send("enter")
         time.sleep(0.2)
-        for j in range (0, 10):
+        for j in range (0, 8):
             LSWindow = GetForegroundWindow()
             time.sleep(1)
-            if GetForegroundWindow() == mainAudacityWindow:
+            newLSWindow = GetForegroundWindow()
+            if newLSWindow == mainAudacityWindow:
                 return
-            if GetForegroundWindow() != LSWindow:
+            if newLSWindow != LSWindow:
                 keyboard.send("enter")
                 break
 
