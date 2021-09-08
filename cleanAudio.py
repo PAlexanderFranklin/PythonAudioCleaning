@@ -197,9 +197,8 @@ keyboard.add_hotkey(executeOptionKey, executeOption)
 # Keep the script from closing for one hour so that hotkeys work
 for i in range(0, 720):
     time.sleep(5)
-    # Close Script when Audacity closes
-    # Doesn't work in VSCode, but does work when script is started normally
-    if Audacity.poll() == 0:
+    # Terminate Script when Audacity closes
+    if GetWindowText(mainAudacityWindow) == "":
         storeBackup()
         os._exit(0)
         
