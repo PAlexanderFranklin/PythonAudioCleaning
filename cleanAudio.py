@@ -76,10 +76,8 @@ def typeCommands(commandList):
         time.sleep(0.25)
         keyboard.send(command)
         if(command == "enter"):
-            while True:
+            while (GetForegroundWindow() != mainAudacityWindow):
                 time.sleep(0.25)
-                if (GetForegroundWindow() == mainAudacityWindow):
-                    break
 
 # Used to remove junk files from source without deleting them to avoid data loss
 def storeBackup():

@@ -12,7 +12,7 @@ def findDate(str):
         date = 210905
     print(date, " If this is the correct date, press enter.")
     userInput = input("Else, enter date (mmddyy): ")
-    if userInput:
+    if userInput: # is not null
         return int(userInput[4:6] + userInput[0:4])
     else:
         return date
@@ -28,7 +28,10 @@ def suggest(str, connection):
         selectedOption = int(userInput)
         return results[selectedOption][0]
     except:
-        return userInput
+        if userInput: # is not null
+            return userInput
+        else: # return the first option
+            return results[0][0]
 
 def addDBEntry(fileName):
     metaDataDB = sqlite3.connect("./MetaData.db")
