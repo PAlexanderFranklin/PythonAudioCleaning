@@ -22,10 +22,10 @@ def suggest(str, connection):
     cursor.execute("SELECT DISTINCT " + str + " FROM audio ORDER BY date DESC;")
     results = cursor.fetchall()
     for i in range(0, len(results)):
-        print(i, ":", results[i][0])
-    userInput = input("Enter a number to select a " + str + " or enter a new one: ")
+        print(i + 1, ":", results[i][0])
+    userInput = input("Enter a number (default '1') to select a " + str + " or enter a new one: ")
     try:
-        selectedOption = int(userInput)
+        selectedOption = int(userInput) - 1
         return results[selectedOption][0]
     except:
         if userInput: # is not null
