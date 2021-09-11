@@ -122,7 +122,7 @@ def labelSounds():
         keyboard.write(str(i))
         keyboard.send("enter")
         time.sleep(0.2)
-        for j in range (0, 8):
+        for j in range (0, 15):
             LSWindow = GetForegroundWindow()
             time.sleep(1)
             newLSWindow = GetForegroundWindow()
