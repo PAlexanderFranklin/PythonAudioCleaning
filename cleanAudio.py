@@ -11,7 +11,7 @@ import populateMetaData
 useMetaData = False
 
 # Setup
-#   pip install (modules that are imported above)
+#   pip install keyboard, pywin32
 #   Written for Audacity 3.0.0
 #   Probably broken for other versions due to menu changes
 #   Change Audacity preferences:
