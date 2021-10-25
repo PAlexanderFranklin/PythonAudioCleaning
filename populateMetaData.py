@@ -11,10 +11,10 @@ def findDate(fileName):
         date = int(date[4:6] + date[0:4])
     except:
         date = 210905
-    print(date, " If this is the correct date, press enter.")
-    userInput = input("Else, enter date (mmddyy): ")
+    print(date, " (yymmdd) If this is the correct date, press enter.")
+    userInput = input("Else, enter date (yymmdd): ")
     if userInput: # is not null
-        return int(userInput[4:6] + userInput[0:4])
+        return int(userInput)
     else:
         return date
 
@@ -81,14 +81,14 @@ def addDBEntry(fileName):
             speaker,
             date
         ) VALUES(
-            '{}',
-            '{}',
-            '{}',
-            '{}',
-            '{}',
-            '{}',
-            {}
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?
         );
-        """.format(fileName, title, book, verse, series, speaker, date)
+        """, (fileName, title, book, verse, series, speaker, date)
     )
     metaDataDB.commit()
