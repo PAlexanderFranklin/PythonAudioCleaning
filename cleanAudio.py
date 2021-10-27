@@ -69,6 +69,7 @@ mainAudacityWindow = GetForegroundWindow()
 # Terminate script from anywhere
 keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 
+# Send multiple keys to keyboard
 def typeCommands(commandList):
     while keyboard.is_pressed('ctrl'):
         time.sleep(0.1)
@@ -147,16 +148,20 @@ def cleanAudio():
         nextLabelKey, 
         noiseReductionKey, "tab", "tab", "tab", "tab", "enter",
         selectAllKey, noiseReductionKey, "enter",
-        compressorKey, "enter", exportAudioKey
+        compressorKey, "enter"
     ])
     if useMetaData:
         populateMetaData.addDBEntry(GetWindowText(mainAudacityWindow))
+
+def exportAudio():
+    typeCommands([exportAudioKey])
 
 macroOptions = [importAndBackup,
                 normalizeAudio,
                 deleteBeginning,
                 deleteEnd,
                 cleanAudio,
+                exportAudio,
                 storeBackup
                 ]
 
