@@ -84,14 +84,22 @@ def typeCommands(commandList):
 def storeBackup():
     set1 = set()
     set2 = set()
+
+    # Get file names in source
     for file in source.iterdir():
         set1.add(file.name)
+
+    # Get file names in destination
     for file in destination.iterdir():
-        set2.add(file.name)
-    fileNameList = list(set1 & set2)
+        # Output should be in mp3, so filenames are converted to wav for pattern matching
+        set2.add(file.name[:-4] + ".wav")
+        set2.add(file.name[:-4] + ".WAV")
+    
+    fileNameList = list(set1 & set2) # Find the intersection of the two sets
     fileList = []
     for name in fileNameList:
         fileList.append(source / name)
+    
     for file in fileList:
         try:
             with (backup / file.name).open(mode="xb") as fid:
@@ -150,11 +158,11 @@ def cleanAudio():
         selectAllKey, noiseReductionKey, "enter",
         compressorKey, "enter"
     ])
-    if useMetaData:
-        populateMetaData.addDBEntry(GetWindowText(mainAudacityWindow))
 
 def exportAudio():
     typeCommands([exportAudioKey])
+    if useMetaData:
+        populateMetaData.addDBEntry(GetWindowText(mainAudacityWindow))
 
 macroOptions = [importAndBackup,
                 normalizeAudio,
