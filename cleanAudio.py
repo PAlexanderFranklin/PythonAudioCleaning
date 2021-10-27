@@ -38,9 +38,9 @@ selectAllKey = "ctrl+A" # default
 trackStartToCursorKey = "shift+L"
 
 # Script Hotkeys
-selectPreviousOptionKey = "ctrl+G"
-executeOptionKey = "ctrl+F"
-selectNextOptionKey = "ctrl+H"
+selectPreviousOptionKey = "ctrl+shift+A"
+executeOptionKey = "ctrl+shift+S"
+selectNextOptionKey = "ctrl+shift+D"
 
 # Configure
 source = Path.cwd() / "Source"
