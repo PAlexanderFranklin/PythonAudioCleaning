@@ -1,6 +1,8 @@
 import re
 import sqlite3
 
+metaDataDB = sqlite3.connect("./MetaData.db")
+
 def findDate(fileName):
     date = 210905
     try:
@@ -18,67 +20,100 @@ def findDate(fileName):
     else:
         return date
 
-def suggest(str, connection, **kwargs):
-    cursor = connection.cursor()
+def suggest(indexTable, mainIndex, **kwargs):
+    cursor = metaDataDB.cursor()
     sortKey = kwargs.get("sortKey", None)
     if sortKey:
         cursor.execute(
-            """SELECT DISTINCT
-            {0}
-            FROM audio
-            WHERE {0} LIKE '{0}%'
-            ORDER BY date DESC;""".format(str)
+            """
+            SELECT
+            name
+            FROM {0}
+            WHERE name LIKE '{1}%';
+            """.format(indexTable, sortKey)
         )
-        cursor2 = connection.cursor()
+        cursor2 = metaDataDB.cursor()
         cursor2.execute(
-            """SELECT DISTINCT
-            {0}
-            FROM audio
-            WHERE {0} NOT LIKE '{0}%'
-            ORDER BY date DESC;""".format(str)
+            """
+            SELECT
+            name
+            FROM {0}
+            WHERE name NOT LIKE '{1}%';
+            """.format(indexTable, sortKey)
         )
         results = cursor.fetchall() + cursor2.fetchall()
     else:
         cursor.execute(
-            """SELECT DISTINCT
-            {}
-            FROM audio
-            ORDER BY date DESC;""".format(str)
+            """
+            SELECT
+            name
+            FROM {};
+            """.format(indexTable)
         )
         results = cursor.fetchall()
     for i in range(0, len(results)):
         print(i + 1, ":", results[i][0])
-    userInput = input("Enter a number (default '1') to select a " + str + " or enter a new one: ")
+    userInput = input("Enter a number (default '1') to select a "
+    + mainIndex[:-3]
+    + " or enter a new one: ")
     try:
-        selectedOption = int(userInput) - 1
-        return results[selectedOption][0]
+        selectedOptionIndex = int(userInput) - 1
+        selectedOption = results[selectedOptionIndex][0]
     except:
         if userInput: # is not null
-            return userInput
+            selectedOption = userInput
         else: # return the first option
-            return results[0][0]
+            selectedOption = results[0][0]
+    for i in range(0, 2):
+        print("starting loop")
+        cursor.execute(
+            """
+            SELECT
+            id
+            FROM {0}
+            WHERE name = ?;
+            """.format(indexTable), (selectedOption,)
+        )
+        results = cursor.fetchall()
+        print(results)
+        try:
+            optionId = results[0][0]
+            return optionId
+        except:
+            print("excepted")
+            cursor.execute(
+                """
+                INSERT INTO {0} (
+                    name
+                ) VALUES(
+                    ?
+                );
+                """.format(indexTable), (selectedOption,)
+            )
+            print("committing")
+            metaDataDB.commit()
+            print("committed")
 
 def addDBEntry(fileName):
-    metaDataDB = sqlite3.connect("./MetaData.db")
     title = input("Enter Title: ")
-    book = suggest("book", metaDataDB)
+    book_id = suggest("books", "book_id")
     verse = input("Enter Verses: ")
-    series = suggest("series", metaDataDB)
-    speaker = suggest(
-        "speaker",
-        metaDataDB,
+    series_id = suggest("series", "series_id")
+    speaker_id = suggest(
+        "speakers", "speaker_id",
         sortKey=fileName[re.search(r'[a-zA-Z]', fileName).start()]
     )
     date = findDate(fileName)
     addingCursor = metaDataDB.cursor()
-    addingCursor.execute("""
+    addingCursor.execute(
+        """
         INSERT INTO audio (
             file_name,
             title,
-            book,
+            book_id,
             verse,
-            series,
-            speaker,
+            series_id,
+            speaker_id,
             date
         ) VALUES(
             ?,
@@ -89,6 +124,6 @@ def addDBEntry(fileName):
             ?,
             ?
         );
-        """, (fileName, title, book, verse, series, speaker, date)
+        """, (fileName, title, book_id, verse, series_id, speaker_id, date)
     )
     metaDataDB.commit()
