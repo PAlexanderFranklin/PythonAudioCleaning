@@ -1,8 +1,6 @@
 import re
 import sqlite3
 
-metaDataDB = sqlite3.connect("./MetaData.db")
-
 def findDate(fileName):
     date = 210905
     try:
@@ -20,8 +18,8 @@ def findDate(fileName):
     else:
         return date
 
-def suggest(indexTable, mainIndex, **kwargs):
-    cursor = metaDataDB.cursor()
+def suggest(indexTable, mainIndex, connection, **kwargs):
+    cursor = connection.cursor()
     sortKey = kwargs.get("sortKey", None)
     if sortKey:
         cursor.execute(
@@ -32,7 +30,7 @@ def suggest(indexTable, mainIndex, **kwargs):
             WHERE name LIKE '{1}%';
             """.format(indexTable, sortKey)
         )
-        cursor2 = metaDataDB.cursor()
+        cursor2 = connection.cursor()
         cursor2.execute(
             """
             SELECT
@@ -91,16 +89,17 @@ def suggest(indexTable, mainIndex, **kwargs):
                 """.format(indexTable), (selectedOption,)
             )
             print("committing")
-            metaDataDB.commit()
+            connection.commit()
             print("committed")
 
 def addDBEntry(fileName):
+    metaDataDB = sqlite3.connect("./MetaData.db")
     title = input("Enter Title: ")
-    book_id = suggest("books", "book_id")
+    book_id = suggest("books", "book_id", metaDataDB)
     verse = input("Enter Verses: ")
-    series_id = suggest("series", "series_id")
+    series_id = suggest("series", "series_id", metaDataDB)
     speaker_id = suggest(
-        "speakers", "speaker_id",
+        "speakers", "speaker_id", metaDataDB,
         sortKey=fileName[re.search(r'[a-zA-Z]', fileName).start()]
     )
     date = findDate(fileName)
