@@ -73,6 +73,8 @@ keyboard.add_hotkey("ctrl+c", lambda: os._exit(0))
 def typeCommands(commandList):
     while keyboard.is_pressed('ctrl'):
         time.sleep(0.1)
+    while keyboard.is_pressed('shift'):
+        time.sleep(0.1)
     for command in commandList:
         time.sleep(0.25)
         keyboard.send(command)
