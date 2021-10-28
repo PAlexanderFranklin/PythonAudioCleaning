@@ -63,7 +63,6 @@ def suggest(indexTable, mainIndex, connection, **kwargs):
         else: # return the first option
             selectedOption = results[0][0]
     for i in range(0, 2):
-        print("starting loop")
         cursor.execute(
             """
             SELECT
@@ -73,12 +72,10 @@ def suggest(indexTable, mainIndex, connection, **kwargs):
             """.format(indexTable), (selectedOption,)
         )
         results = cursor.fetchall()
-        print(results)
         try:
             optionId = results[0][0]
             return optionId
         except:
-            print("excepted")
             cursor.execute(
                 """
                 INSERT INTO {0} (
@@ -88,9 +85,7 @@ def suggest(indexTable, mainIndex, connection, **kwargs):
                 );
                 """.format(indexTable), (selectedOption,)
             )
-            print("committing")
             connection.commit()
-            print("committed")
 
 def addDBEntry(fileName):
     metaDataDB = sqlite3.connect("./MetaData.db")
