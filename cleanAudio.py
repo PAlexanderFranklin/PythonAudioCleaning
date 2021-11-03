@@ -5,10 +5,8 @@ import subprocess
 import time
 from win32gui import GetForegroundWindow, GetWindowText, GetClassName
 
+from config import *
 import populateMetaData
-
-# Off by default because this is use-case specific
-useMetaData = False
 
 # Setup
 #   pip install keyboard, pywin32
@@ -23,32 +21,6 @@ useMetaData = False
 #           Label type:               Region between sounds
 #       "Compressor"
 #           Set attack and release times to their minimum value
-
-# Audacity Hotkeys
-compressorKey = "ctrl+J"
-cursorToTrackEndKey = "shift+K"
-exportAudioKey = "ctrl+shift+E"
-importAudioKey = "ctrl+shift+I" # default
-labelSoundsKey = "alt+L"
-nextLabelKey = "alt+]"
-noiseReductionKey = "alt+R"
-normalizeKey = "alt+N"
-removeTracksKey = "alt+T"
-selectAllKey = "ctrl+A" # default
-trackStartToCursorKey = "shift+L"
-
-# Script Hotkeys
-selectPreviousOptionKey = "ctrl+shift+A"
-executeOptionKey = "ctrl+shift+S"
-selectNextOptionKey = "ctrl+shift+D"
-
-# Configure
-source = Path.cwd() / "Source"
-destination = Path.cwd() / "Destination"
-backup = Path.cwd() / "Backup"
-
-# Audacity executable path
-AudacityPath = Path("C:/Program Files (x86)/Audacity/audacity.exe")
 
 Audacity = subprocess.Popen(AudacityPath)
 
