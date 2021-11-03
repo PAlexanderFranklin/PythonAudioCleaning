@@ -14,9 +14,10 @@ def findDate(fileName):
     print(date, " (yymmdd) If this is the correct date, press enter.")
     userInput = input("Else, enter date (yymmdd): ")
     if userInput: # is not null
+        userInput = "20" + userInput
         return int(userInput)
     else:
-        return date
+        return 20000000 + date
 
 def suggest(indexTable, mainIndex, connection, **kwargs):
     cursor = connection.cursor()
