@@ -29,13 +29,13 @@ getNoiseProfile = False
 
 # Store Audacity Window for checking when effects are finished processing
 while True:
+    time.sleep(0.25)
     theWindow = GetForegroundWindow()
     if GetClassName(theWindow) == "wxWindowNR":
         if GetWindowText(theWindow) != "Audacity is starting up...":
             break
         else:
             getNoiseProfile = True
-    time.sleep(0.25)
 mainAudacityWindow = GetForegroundWindow()
 
 # Terminate script from anywhere
