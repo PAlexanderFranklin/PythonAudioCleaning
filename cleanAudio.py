@@ -48,8 +48,8 @@ def typeCommands(commandList):
     while keyboard.is_pressed('shift'):
         time.sleep(0.1)
     for command in commandList:
-        time.sleep(0.25)
         keyboard.send(command)
+        time.sleep(0.25)
         if(command == "enter"):
             while (GetForegroundWindow() != mainAudacityWindow):
                 time.sleep(0.25)
@@ -98,9 +98,7 @@ def deleteEnd():
 
 def labelSounds():
     for i in range (-28, -18):
-        keyboard.send(selectAllKey)
-        time.sleep(0.05)
-        keyboard.send(labelSoundsKey)
+        typeCommands([selectAllKey, labelSoundsKey])
         time.sleep(0.2)
         keyboard.write(str(i))
         keyboard.send("enter")
