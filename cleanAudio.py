@@ -99,8 +99,9 @@ def labelSounds():
             if newLSWindow == mainAudacityWindow:
                 return
             if newLSWindow != LSWindow:
-                keyboard.send("enter")
                 break
+        keyboard.send("enter")
+        time.sleep(0.2)
 
 def reduceNoise():
     # This "if" block is used to determine menu structure
