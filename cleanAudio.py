@@ -142,7 +142,7 @@ def selectPreviousOption():
         optionCursor = len(macroOptions) - 1
     else:
         optionCursor -= 1
-    print(macroOptions[optionCursor].__name__)
+    print("Selected: " + macroOptions[optionCursor].__name__)
 
 def selectNextOption():
     global optionCursor
@@ -150,18 +150,23 @@ def selectNextOption():
         optionCursor = 0
     else:
         optionCursor += 1
-    print(macroOptions[optionCursor].__name__)
+    print("Selected: " + macroOptions[optionCursor].__name__)
 
 def executeOption():
     global optionCursor
+    print("Running command...")
     macroOptions[optionCursor]()
+    print("Finished execution.")
     if optionCursor == len(macroOptions) - 1:
         optionCursor = 0
     else:
         optionCursor += 1
-    print(macroOptions[optionCursor].__name__)
+    print("Selected: " + macroOptions[optionCursor].__name__)
 
-print(macroOptions[optionCursor].__name__)
+print("Press " + executeOptionKey + " to run the selected command. Press " +
+    selectPreviousOptionKey + " or " + selectNextOptionKey +
+    " to select a different command.")
+print("Selected: " + macroOptions[optionCursor].__name__)
 
 # Script Hotkeys
 keyboard.add_hotkey(selectPreviousOptionKey, selectPreviousOption)
