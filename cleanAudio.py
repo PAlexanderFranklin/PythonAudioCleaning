@@ -8,20 +8,6 @@ from win32gui import GetForegroundWindow, GetWindowText, GetClassName
 from config import *
 import populateMetaData
 
-# Setup
-#   pip install keyboard, pywin32
-#   Written for Audacity 3.0.0
-#   Probably broken for other versions due to menu changes
-#   Change Audacity preferences:
-#       Set audacity keyboard preferences to the keys in the "Hotkeys" section below
-#       Remove Ctrl+F binding (Track Size - Fit to Width)
-#   Set effect defaults in Audacity:
-#       "Label Sounds"
-#           Minimum silence duration: 2 seconds
-#           Label type:               Region between sounds
-#       "Compressor"
-#           Set attack and release times to their minimum value
-
 Audacity = subprocess.Popen(AudacityPath)
 
 # When opened, Audacity has a different menu structure than after a noise profile is obtained.
