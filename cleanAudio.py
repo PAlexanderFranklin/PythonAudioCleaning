@@ -90,6 +90,9 @@ def importAndBackup():
 def normalizeAudio():
     typeCommands([selectAllKey, normalizeKey, "enter"])
 
+def compressAudio():
+    typeCommands([selectAllKey, compressorKey, "enter"])
+
 def deleteBeginning():
     typeCommands([trackStartToCursorKey, "backspace"])
 
@@ -113,7 +116,7 @@ def labelSounds():
                 keyboard.send("enter")
                 break
 
-def cleanAudio():
+def reduceNoise():
     # This "if" block is used to determine menu structure
     global getNoiseProfile
     if getNoiseProfile:
@@ -128,7 +131,6 @@ def cleanAudio():
         nextLabelKey, 
         noiseReductionKey, "tab", "tab", "tab", "tab", "enter",
         selectAllKey, noiseReductionKey, "enter",
-        compressorKey, "enter"
     ])
 
 def exportAudio():
@@ -140,7 +142,8 @@ macroOptions = [importAndBackup,
                 normalizeAudio,
                 deleteBeginning,
                 deleteEnd,
-                cleanAudio,
+                reduceNoise,
+                compressAudio,
                 exportAudio,
                 storeBackup
                 ]
