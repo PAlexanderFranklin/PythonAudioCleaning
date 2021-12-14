@@ -174,12 +174,10 @@ keyboard.add_hotkey(selectPreviousOptionKey, selectPreviousOption)
 keyboard.add_hotkey(selectNextOptionKey, selectNextOption)
 keyboard.add_hotkey(executeOptionKey, executeOption)
 
-# Keep the script from closing for one hour so that hotkeys work
-for i in range(0, 720):
+# Keep the script from closing so that hotkeys work
+while (True):
     time.sleep(5)
     # Terminate Script when Audacity closes
     if GetWindowText(mainAudacityWindow) == "":
         storeBackup()
         os._exit(0)
-        
-storeBackup()
