@@ -155,7 +155,7 @@ def selectNextOption():
 
 def executeOption():
     global optionCursor
-    print("Running command...")
+    print("Let go of Control and Shift to run command.")
     macroOptions[optionCursor]()
     print("Finished execution.")
     if optionCursor == len(macroOptions) - 1:
