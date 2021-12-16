@@ -1,12 +1,3 @@
+This script is written for Audacity 3.0.0, and is probably broken for other versions due to menu structure changes.
 ### Setup
-   - pip install keyboard, pywin32
-   - Written for Audacity 3.0.0
-   - Probably broken for other versions due to menu changes
-   - Change Audacity preferences:
-       Set audacity keyboard preferences to the keys in the "config.py"
-   - Set effect defaults in Audacity:
-       "Label Sounds"
-           Minimum silence duration: 2 seconds
-           Label type:               Region between sounds
-       "Compressor"
-           Set attack and release times to their minimum value
+Install the Python modules "keyboard" and "pywin32" using "pip install keyboard, pywin32". Change Audacity keyboard shortcuts and/or the constants in config.py to make them match. Run functions once without the script to set their options for the script. Of particular note are the options "minimum silence duration" and "label type" in the "Label Sounds" analysis tool, as well as Compressor settings.
