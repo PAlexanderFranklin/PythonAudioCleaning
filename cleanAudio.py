@@ -11,7 +11,7 @@ import populateMetaData
 Audacity = subprocess.Popen(AudacityPath)
 
 # When opened, Audacity has a different menu structure than after a noise profile is obtained.
-getNoiseProfile = False
+noNoiseProfile = False
 
 # Store Audacity Window for checking when effects are finished processing
 while True:
@@ -21,7 +21,7 @@ while True:
         if GetWindowText(theWindow) != "Audacity is starting up...":
             break
         else:
-            getNoiseProfile = True
+            noNoiseProfile = True
 mainAudacityWindow = GetForegroundWindow()
 
 # Terminate script from anywhere
@@ -104,19 +104,21 @@ def labelSounds():
         time.sleep(0.2)
 
 def reduceNoise():
-    # This "if" block is used to determine menu structure
-    global getNoiseProfile
-    if getNoiseProfile:
-        typeCommands([selectAllKey, noiseReductionKey, "enter"])
-        getNoiseProfile = False
-    
-    normalizeAudio()
-
     labelSounds()
 
     typeCommands([
         nextLabelKey, 
-        noiseReductionKey, "tab", "tab", "tab", "tab", "enter",
+        noiseReductionKey,
+    ])
+    
+    global noNoiseProfile
+    if noNoiseProfile:
+        noNoiseProfile = False
+    else:
+        typeCommands(["tab", "tab", "tab", "tab",])
+
+    typeCommands([
+        "enter",
         selectAllKey, noiseReductionKey, "enter",
     ])
 
