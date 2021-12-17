@@ -76,6 +76,9 @@ def importAndBackup():
 def normalizeAudio():
     typeCommands([selectAllKey, normalizeKey, "enter"])
 
+def amplifyAudio():
+    typeCommands([selectAllKey, amplifyKey, "tab", "tab", 9, "enter"])
+
 def compressAudio():
     typeCommands([selectAllKey, compressorKey, "enter"])
 
@@ -92,7 +95,7 @@ def labelSounds():
         keyboard.write(str(i))
         keyboard.send("enter")
         time.sleep(0.2)
-        for j in range (0, 15):
+        for j in range (0, 10):
             LSWindow = GetForegroundWindow()
             time.sleep(1)
             newLSWindow = GetForegroundWindow()
@@ -130,6 +133,7 @@ macroOptions = [importAndBackup,
                 deleteBeginning,
                 deleteEnd,
                 reduceNoise,
+                amplifyAudio,
                 compressAudio,
                 exportAudio,
                 storeBackup

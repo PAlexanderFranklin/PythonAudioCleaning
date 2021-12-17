@@ -4,6 +4,7 @@ from pathlib import Path
 useMetaData = False
 
 # Audacity Hotkeys
+amplifyKey = "alt+A"
 compressorKey = "ctrl+J"
 cursorToTrackEndKey = "shift+K"
 exportAudioKey = "ctrl+shift+E"
