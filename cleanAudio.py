@@ -77,7 +77,7 @@ def normalizeAudio():
     typeCommands([selectAllKey, normalizeKey, "enter"])
 
 def amplifyAudio():
-    typeCommands([selectAllKey, amplifyKey, "tab", "tab", 9, "enter"])
+    typeCommands([selectAllKey, amplifyKey, "tab", "tab", amplifydB, "enter"])
 
 def compressAudio():
     typeCommands([selectAllKey, compressorKey, "enter"])

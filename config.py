@@ -29,3 +29,6 @@ backup = Path.cwd() / "Backup"
 
 # Audacity executable path
 AudacityPath = Path("C:/Program Files (x86)/Audacity/audacity.exe")
+
+# Target decibal value
+amplifydB = 9
