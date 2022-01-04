@@ -136,7 +136,6 @@ macroOptions = [importAndBackup,
                 deleteEnd,
                 reduceNoise,
                 amplifyAudio,
-                compressAudio,
                 exportAudio,
                 storeBackup
                 ]
