@@ -13,5 +13,3 @@ if userInput:
     testString = userInput
 
 populateMetaData.addDBEntry(testString)
-
-# I am testing a commit
