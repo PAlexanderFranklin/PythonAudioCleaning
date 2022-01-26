@@ -4,7 +4,7 @@ from pathlib import Path
 useMetaData = False
 
 # Audacity Hotkeys
-amplifyKey = "alt+A"
+limiterKey = "alt+A"
 compressorKey = "ctrl+J"
 cursorToTrackEndKey = "shift+K"
 exportAudioKey = "ctrl+shift+E"
@@ -29,6 +29,3 @@ backup = Path.cwd() / "Backup"
 
 # Audacity executable path
 AudacityPath = Path("C:/Program Files (x86)/Audacity/audacity.exe")
-
-# Target decibal value
-amplifydB = 9
