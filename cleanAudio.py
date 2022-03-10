@@ -1,6 +1,7 @@
 import keyboard
 import os
 from pathlib import Path
+from shutil import move
 import subprocess
 import time
 from win32gui import GetForegroundWindow, GetWindowText, GetClassName
@@ -62,12 +63,9 @@ def storeBackup():
     
     for file in fileList:
         try:
-            with (backup / file.name).open(mode="xb") as fid:
-                fid.write(file.read_bytes())
+            move(file, backup / file.name)
         except:
             print(file.name + " failed to copy")
-        else:
-            Path.unlink(file)
     
 def importAndBackup():
     storeBackup()
